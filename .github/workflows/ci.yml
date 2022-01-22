@@ -1,0 +1,40 @@
+name: Generate terraform docs
+on:
+  push:
+    branches:
+      -  main
+  pull_request:
+    branches:
+      -  main
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: Render terraform docs in README and push changes
+      uses: terraform-docs/gh-actions@v0.11.0
+      with:
+        indention: 2
+        working-dir: .
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
+  format:
+      runs-on: ubuntu-latest
+      if: "!contains(github.event.head_commit.message, '[ci skip]')"
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: Terraform format
+          uses: hashicorp/terraform-github-actions@master
+          with:
+            tf_actions_working_dir: examples
+            tf_actions_version: '0.12.17'
+            tf_actions_subcommand: 'fmt'
+            tf_actions_comment: true
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
