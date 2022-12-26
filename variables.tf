@@ -29,3 +29,15 @@ variable "dmarc" {
   description = "DMARC specification (optional)"
   type        = string
 }
+
+variable "dkim_enable" {
+  default     = true
+  description = "Add dkim records"
+  type        = bool
+}
+
+variable "spf_enable" {
+  default     = true
+  description = "Add spf records"
+  type        = bool
+}
