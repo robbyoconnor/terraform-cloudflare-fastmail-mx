@@ -7,10 +7,6 @@ terraform {
   }
 }
 
-provider "cloudflare" {
-  api_token = var.cf_api_token
-}
-
 resource "cloudflare_record" "mx" {
   for_each = {
     primary   = { server = "in1-smtp.messagingengine.com", priority = 10 }
