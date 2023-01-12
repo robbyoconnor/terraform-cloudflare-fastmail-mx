@@ -26,7 +26,7 @@ resource "cloudflare_record" "spf" {
   zone_id = var.cf_zone_id
   name    = var.sub_domain
   type    = "TXT"
-  value   = "v=spf1 include:spf.messagingengine.com ?all "
+  value   = "v=spf1 include:spf.messagingengine.com ?all"
   ttl     = var.ttl
 }
 
