@@ -2,13 +2,8 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "~> 3.0"
     }
   }
-}
-
-provider "cloudflare" {
-  api_token = var.cf_api_token
 }
 
 resource "cloudflare_record" "mx" {
@@ -26,17 +21,18 @@ resource "cloudflare_record" "mx" {
 }
 
 resource "cloudflare_record" "spf" {
+  count   = var.spf_enable ? 1 : 0
   zone_id = var.cf_zone_id
   name    = var.sub_domain
   type    = "TXT"
-  value   = "v=spf1 include:spf.messagingengine.com ?all "
+  value   = "v=spf1 include:spf.messagingengine.com ?all"
   ttl     = var.ttl
 }
 
 
 
 resource "cloudflare_record" "dkim" {
-  for_each = { for i in range(1, 4) : "${i}" => i }
+  for_each = { for i in(var.dkim_enable ? range(1, 4) : []) : "${i}" => i }
   zone_id  = var.cf_zone_id
   type     = "CNAME"
   name     = "fm${each.value}._domainkey"
